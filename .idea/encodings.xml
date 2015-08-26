@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/app/src/main/java/edu/rosehulman/moviequotes/MainActivity.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/edu/rosehulman/moviequotes/MovieQuote.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/edu/rosehulman/moviequotes/MovieQuoteArrayAdapter.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/dialog_add.xml" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/dialog_edit.xml" charset="windows-1252" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>
