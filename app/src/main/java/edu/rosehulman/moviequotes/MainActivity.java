@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,10 +32,12 @@ public class MainActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d("FMQ", "OnCreate started");
         getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         getListView().setMultiChoiceModeListener(new MyMultiClickListener());
         mAdapter = new MovieQuoteArrayAdapter(this);
         setListAdapter(mAdapter);
+        Log.d("FMQ", "Adding onCreate done");
     }
 
     private class MyMultiClickListener implements MultiChoiceModeListener {
@@ -179,7 +182,10 @@ public class MainActivity extends ListActivity {
                     public void onClick(View v) {
                         String movieTitleText = movieTitleEditText.getText().toString();
                         String movieQuoteText = movieQuoteEditText.getText().toString();
+                        // MovieQuote currentQuote = new MovieQuote("unused", movieTitleText, movieQuoteText);
                         MovieQuote currentQuote = new MovieQuote(movieTitleText, movieQuoteText);
+
+
                         mAdapter.addItem(currentQuote);
 
                         dismiss();
