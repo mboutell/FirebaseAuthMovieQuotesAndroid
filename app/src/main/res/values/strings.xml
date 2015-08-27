@@ -12,5 +12,9 @@
     <string name="context_delete_item_text">Delete</string>
     <string name="context_delete_title">Select movies to delete</string>
     <string name="done">Done</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="firebase_url">http://boutell-auth-movie-quotes.firebaseio.com</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

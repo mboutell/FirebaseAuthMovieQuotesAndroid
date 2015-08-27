@@ -20,6 +20,7 @@ import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -38,6 +39,9 @@ public class MainActivity extends ListActivity {
         mAdapter = new MovieQuoteArrayAdapter(this);
         setListAdapter(mAdapter);
         Log.d("FMQ", "Adding onCreate done");
+
+        String uid = getIntent().getStringExtra("UID");
+        Toast.makeText(this, uid, Toast.LENGTH_LONG).show();
     }
 
     private class MyMultiClickListener implements MultiChoiceModeListener {
