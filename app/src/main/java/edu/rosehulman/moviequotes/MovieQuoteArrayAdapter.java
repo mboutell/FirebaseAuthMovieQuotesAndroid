@@ -12,6 +12,7 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +32,52 @@ public class MovieQuoteArrayAdapter extends BaseAdapter implements ChildEventLis
         Firebase.setAndroidContext(context);
         mFirebaseQuotesReference = new Firebase("https://boutell-auth-movie-quotes.firebaseio.com/quotes");
         mFirebaseUserReference = new Firebase("https://boutell-auth-movie-quotes.firebaseio.com/user/" + uid);
-        mFirebaseQuotesReference.addChildEventListener(this);
+
+        if (mShowAllQuotes) {
+            mFirebaseQuotesReference.addChildEventListener(this);
+        } else {
+            mFirebaseUserReference.addValueEventListener(new UserValueEventListener());
+        }
         Log.d("FMQ", "Adding listener");
+    }
+
+    private class UserValueEventListener implements ValueEventListener {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            for (DataSnapshot quoteRef : dataSnapshot.getChildren()) {
+                Firebase singleQuoteRef = mFirebaseQuotesReference.child(quoteRef.getKey());
+                singleQuoteRef.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                String key = dataSnapshot.getKey();
+
+                                for (MovieQuote mq : mMovieQuotes) {
+                                    if (mq.getKey().equals(key)) {
+                                        mq.setValues((Map<String, Object>) dataSnapshot.getValue());
+                                        notifyDataSetChanged();
+                                        return;
+                                    }
+                                }
+                                mMovieQuotes.add(0, new MovieQuote(key, (Map<String, Object>) dataSnapshot.getValue()));
+                                notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(FirebaseError firebaseError) {
+
+                            }
+                        }
+                );
+            }
+
+
+        }
+
+        @Override
+        public void onCancelled(FirebaseError firebaseError) {
+
+        }
     }
 
     @Override
@@ -103,7 +148,7 @@ public class MovieQuoteArrayAdapter extends BaseAdapter implements ChildEventLis
     @Override
     @SuppressWarnings("unchecked")
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        mMovieQuotes.add(0, new MovieQuote(dataSnapshot.getKey(), (Map<String, Object>)dataSnapshot.getValue()));
+        mMovieQuotes.add(0, new MovieQuote(dataSnapshot.getKey(), (Map<String, Object>) dataSnapshot.getValue()));
 //        String key = dataSnapshot.getKey();
 //        String movie = dataSnapshot.child("movie").getValue(String.class);
 //        String quote = dataSnapshot.child("quote").getValue(String.class);
@@ -119,7 +164,7 @@ public class MovieQuoteArrayAdapter extends BaseAdapter implements ChildEventLis
         //String quote = dataSnapshot.child("quote").getValue(String.class);
         for (MovieQuote mq : mMovieQuotes) {
             if (mq.getKey().equals(key)) {
-                mq.setValues((Map<String, Object>)dataSnapshot.getValue());
+                mq.setValues((Map<String, Object>) dataSnapshot.getValue());
                 //mq.setMovie(movie);
                 //mq.setQuote(quote);
                 break;
@@ -142,7 +187,7 @@ public class MovieQuoteArrayAdapter extends BaseAdapter implements ChildEventLis
 
     @Override
     public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-        Log.d("FMQ", "child moved" + dataSnapshot );
+        Log.d("FMQ", "child moved" + dataSnapshot);
     }
 
     @Override
