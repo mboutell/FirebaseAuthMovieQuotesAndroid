@@ -10,33 +10,42 @@ import java.util.Map;
  */
 public class MovieQuote {
 
+    private String mKey;
     private String mMovie;
     private String mQuote;
-    private String mKey;
+    private String mUid;
 
-    public MovieQuote(String key, String movie, String quote) {
+    public MovieQuote(String key, String movie, String quote, String uid) {
         mKey = key;
         mMovie = movie;
         mQuote = quote;
+        mUid = uid;
     }
 
-    public MovieQuote() { }
+    public MovieQuote() {
+    }
 
-    public MovieQuote(String movie, String quote) {
+    public MovieQuote(String movie, String quote, String uid) {
         mMovie = movie;
         mQuote = quote;
+        mUid = uid;
     }
 
     public MovieQuote(String key, Map<String, Object> map) {
         mKey = key;
-        mMovie = (String)map.get("movie");
-        mQuote = (String)map.get("quote");
+        mMovie = (String) map.get("movie");
+        mQuote = (String) map.get("quote");
+        mUid = (String) map.get("uid");
 //        mMovie = movie;
 //        mQuote = quote;
     }
 
     public String getKey() {
         return mKey;
+    }
+
+    public String getUid() {
+        return mUid;
     }
 
     public String getMovie() {
@@ -58,13 +67,14 @@ public class MovieQuote {
     public void setValues(Map<String, Object> values) {
         mMovie = (String) values.get("movie");
         mQuote = (String) values.get("quote");
+        mUid = (String) values.get("uid");
     }
-
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> map = new HashMap<>();
         map.put("movie", mMovie);
         map.put("quote", mQuote);
+        map.put("uid", mUid);
         return map;
     }
 

@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,20 +28,18 @@ public class MainActivity extends ListActivity {
     public static final String MQ = "MQ";
     private MovieQuoteArrayAdapter mAdapter;
     private boolean mShowAllQuotes = true;
+    private String mUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d("FMQ", "OnCreate started");
+        mUid = getIntent().getStringExtra("UID");
         getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         getListView().setMultiChoiceModeListener(new MyMultiClickListener());
-        mAdapter = new MovieQuoteArrayAdapter(this);
+        mAdapter = new MovieQuoteArrayAdapter(this, mUid, mShowAllQuotes);
         setListAdapter(mAdapter);
-        Log.d("FMQ", "Adding onCreate done");
-
-        String uid = getIntent().getStringExtra("UID");
-        Toast.makeText(this, uid, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, mUid, Toast.LENGTH_LONG).show();
     }
 
     private class MyMultiClickListener implements MultiChoiceModeListener {
@@ -176,13 +173,12 @@ public class MainActivity extends ListActivity {
 
     private void toggleQuotesShown(MenuItem item) {
         mShowAllQuotes = !mShowAllQuotes;
-        if (mShowAllQuotes) {
-            item.setTitle(getString(R.string.show_mine));
-            item.setTitleCondensed(getString(R.string.show_mine));
-        } else {
-            item.setTitle(getString(R.string.show_all));
-            item.setTitleCondensed(getString(R.string.show_all));
-        }
+        item.setTitle(getString(mShowAllQuotes ? R.string.show_mine : R.string.show_all));
+        item.setTitleCondensed(getString(mShowAllQuotes ? R.string.show_mine : R.string.show_all));
+        mAdapter = new MovieQuoteArrayAdapter(this, mUid, mShowAllQuotes);
+        setListAdapter(mAdapter);
+
+
     }
 
     private void addItem() {
@@ -202,7 +198,7 @@ public class MainActivity extends ListActivity {
                         String movieTitleText = movieTitleEditText.getText().toString();
                         String movieQuoteText = movieQuoteEditText.getText().toString();
                         // MovieQuote currentQuote = new MovieQuote("unused", movieTitleText, movieQuoteText);
-                        MovieQuote currentQuote = new MovieQuote(movieTitleText, movieQuoteText);
+                        MovieQuote currentQuote = new MovieQuote(movieTitleText, movieQuoteText, mUid);
 
 
                         mAdapter.addItem(currentQuote);

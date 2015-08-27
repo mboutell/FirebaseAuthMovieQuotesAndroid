@@ -21,12 +21,16 @@ public class MovieQuoteArrayAdapter extends BaseAdapter implements ChildEventLis
     private final LayoutInflater mInflater;
     private List<MovieQuote> mMovieQuotes;
     private Firebase mFirebaseQuotesReference;
+    private Firebase mFirebaseUserReference;
+    private boolean mShowAllQuotes;
 
-    public MovieQuoteArrayAdapter(Context context) {
+    public MovieQuoteArrayAdapter(Context context, String uid, boolean showAllQuotes) {
         mInflater = LayoutInflater.from(context);
         mMovieQuotes = new ArrayList<MovieQuote>();
+        mShowAllQuotes = showAllQuotes;
         Firebase.setAndroidContext(context);
-        mFirebaseQuotesReference = new Firebase("https://boutell-movie-quotes.firebaseio.com/quotes");
+        mFirebaseQuotesReference = new Firebase("https://boutell-auth-movie-quotes.firebaseio.com/quotes");
+        mFirebaseUserReference = new Firebase("https://boutell-auth-movie-quotes.firebaseio.com/user/" + uid);
         mFirebaseQuotesReference.addChildEventListener(this);
         Log.d("FMQ", "Adding listener");
     }
@@ -41,10 +45,14 @@ public class MovieQuoteArrayAdapter extends BaseAdapter implements ChildEventLis
 //        Map<String, String> mqMap = new HashMap<>();
 //        mqMap.put("movie", movieQuote.getMovie());
 //        mqMap.put("quote", movieQuote.getQuote());
-        mFirebaseQuotesReference.push().setValue(movieQuote.toMap());
+
+        Firebase quoteRef = mFirebaseQuotesReference.push();
+        quoteRef.setValue(movieQuote.toMap());
+
 //        mFirebaseQuotesReference.push().setValue(movieQuote.toMap());
 //        mMovieQuotes.add(movieQuote);
 //        notifyDataSetChanged();
+        mFirebaseUserReference.child(quoteRef.getKey()).setValue(true);
     }
 
     public void updateItem(MovieQuote movieQuote, String newMovie, String newQuote) {
