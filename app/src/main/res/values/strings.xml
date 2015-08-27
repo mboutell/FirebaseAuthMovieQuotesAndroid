@@ -16,5 +16,8 @@
     <string name="firebase_url">http://boutell-auth-movie-quotes.firebaseio.com</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="show_mine">Show mine</string>
+    <string name="show_all">Show all</string>
+
 
 </resources>

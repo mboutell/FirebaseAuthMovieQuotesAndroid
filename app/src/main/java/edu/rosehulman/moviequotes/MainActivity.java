@@ -28,6 +28,7 @@ public class MainActivity extends ListActivity {
 
     public static final String MQ = "MQ";
     private MovieQuoteArrayAdapter mAdapter;
+    private boolean mShowAllQuotes = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,8 +167,22 @@ public class MainActivity extends ListActivity {
                 // add
                 addItem();
                 return true;
+            case R.id.show_quotes_toggle:
+                toggleQuotesShown(item);
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void toggleQuotesShown(MenuItem item) {
+        mShowAllQuotes = !mShowAllQuotes;
+        if (mShowAllQuotes) {
+            item.setTitle(getString(R.string.show_mine));
+            item.setTitleCondensed(getString(R.string.show_mine));
+        } else {
+            item.setTitle(getString(R.string.show_all));
+            item.setTitleCondensed(getString(R.string.show_all));
+        }
     }
 
     private void addItem() {

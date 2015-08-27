@@ -29,6 +29,10 @@ public class LoginActivity extends Activity {
 
         mEmailEditText = (EditText) findViewById(R.id.emailEditText);
         mPasswordEditText = (EditText) findViewById(R.id.passwordEditText);
+
+        mEmailEditText.setText("matt@boutell.com");
+        mPasswordEditText.setText("boutell");
+
     }
 
 
