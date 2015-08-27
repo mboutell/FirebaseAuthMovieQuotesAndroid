@@ -12,7 +12,7 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
+import com.firebase.client.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,6 @@ public class MovieQuoteArrayAdapter extends BaseAdapter implements ChildEventLis
     private final LayoutInflater mInflater;
     private List<MovieQuote> mMovieQuotes;
     private Firebase mFirebaseQuotesReference;
-    private Firebase mFirebaseUserReference;
     private boolean mShowAllQuotes;
 
     public MovieQuoteArrayAdapter(Context context, String uid, boolean showAllQuotes) {
@@ -30,53 +29,13 @@ public class MovieQuoteArrayAdapter extends BaseAdapter implements ChildEventLis
         mMovieQuotes = new ArrayList<MovieQuote>();
         mShowAllQuotes = showAllQuotes;
         Firebase.setAndroidContext(context);
-        mFirebaseQuotesReference = new Firebase("https://boutell-auth-movie-quotes.firebaseio.com/quotes");
-        mFirebaseUserReference = new Firebase("https://boutell-auth-movie-quotes.firebaseio.com/user/" + uid);
 
-        if (mShowAllQuotes) {
+        mFirebaseQuotesReference = new Firebase("https://boutell-auth-movie-quotes.firebaseio.com/quotes");
+        if (showAllQuotes) {
             mFirebaseQuotesReference.addChildEventListener(this);
         } else {
-            mFirebaseUserReference.addValueEventListener(new UserValueEventListener());
-        }
-        Log.d("FMQ", "Adding listener");
-    }
-
-    private class UserValueEventListener implements ValueEventListener {
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-            for (DataSnapshot quoteRef : dataSnapshot.getChildren()) {
-                Firebase singleQuoteRef = mFirebaseQuotesReference.child(quoteRef.getKey());
-                singleQuoteRef.addListenerForSingleValueEvent(
-                        new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                String key = dataSnapshot.getKey();
-
-                                for (MovieQuote mq : mMovieQuotes) {
-                                    if (mq.getKey().equals(key)) {
-                                        mq.setValues((Map<String, Object>) dataSnapshot.getValue());
-                                        notifyDataSetChanged();
-                                        return;
-                                    }
-                                }
-                                mMovieQuotes.add(0, new MovieQuote(key, (Map<String, Object>) dataSnapshot.getValue()));
-                                notifyDataSetChanged();
-                            }
-
-                            @Override
-                            public void onCancelled(FirebaseError firebaseError) {
-
-                            }
-                        }
-                );
-            }
-
-
-        }
-
-        @Override
-        public void onCancelled(FirebaseError firebaseError) {
-
+            Query myQuotesRef = mFirebaseQuotesReference.orderByChild("uid").equalTo(uid);
+            myQuotesRef.addChildEventListener(this);
         }
     }
 
@@ -86,30 +45,13 @@ public class MovieQuoteArrayAdapter extends BaseAdapter implements ChildEventLis
     }
 
     public void addItem(MovieQuote movieQuote) {
-        //DONE: Remove the next line(s) and use Firebase instead
-//        Map<String, String> mqMap = new HashMap<>();
-//        mqMap.put("movie", movieQuote.getMovie());
-//        mqMap.put("quote", movieQuote.getQuote());
-
-        Firebase quoteRef = mFirebaseQuotesReference.push();
-        quoteRef.setValue(movieQuote.toMap());
-
-//        mFirebaseQuotesReference.push().setValue(movieQuote.toMap());
-//        mMovieQuotes.add(movieQuote);
-//        notifyDataSetChanged();
-        mFirebaseUserReference.child(quoteRef.getKey()).setValue(true);
+        mFirebaseQuotesReference.push().setValue(movieQuote.toMap());
     }
 
     public void updateItem(MovieQuote movieQuote, String newMovie, String newQuote) {
-        //DONE: Remove the next line(s) and use Firebase instead
-//        Map<String, String> mqMap = new HashMap<>();
-//        mqMap.put("movie", newMovie);
-//        mqMap.put("quote", newQuote);
-//        mFirebaseQuotesReference.child(movieQuote.getKey()).setValue(mqMap);
         movieQuote.setMovie(newMovie);
         movieQuote.setQuote(newQuote);
         mFirebaseQuotesReference.child(movieQuote.getKey()).setValue(movieQuote.toMap());
-//        notifyDataSetChanged();
     }
 
     public void removeItem(MovieQuote movieQuote) {

@@ -67,10 +67,16 @@ public class MainActivity extends ListActivity {
         @Override
         public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
             MovieQuote item = (MovieQuote) getListAdapter().getItem(position);
-            if (checked) {
-                mQuotesToDelete.add(item);
+            if (!item.getUid().equals(mUid)) {
+                Toast.makeText(MainActivity.this, "This quote belongs to another user", Toast.LENGTH_LONG).show();
+            } else if (checked) {
+                    mQuotesToDelete.add(item);
             } else {
                 mQuotesToDelete.remove(item);
+            }
+
+            if (mQuotesToDelete.size() == 0) {
+                mode.finish();
             }
             mode.setTitle("Selected " + mQuotesToDelete.size() + " quotes");
         }
@@ -98,6 +104,12 @@ public class MainActivity extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
 
         final MovieQuote currentQuote = (MovieQuote) getListAdapter().getItem(position);
+
+        if (!currentQuote.getUid().equals(mUid)) {
+            Toast.makeText(MainActivity.this, "This quote belongs to another user", Toast.LENGTH_LONG).show();
+            return;
+        }
+
 
         DialogFragment df = new DialogFragment() {
             @Override
