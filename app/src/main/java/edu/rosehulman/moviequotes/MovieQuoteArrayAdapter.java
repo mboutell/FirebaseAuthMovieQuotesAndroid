@@ -22,15 +22,14 @@ public class MovieQuoteArrayAdapter extends BaseAdapter implements ChildEventLis
     private final LayoutInflater mInflater;
     private List<MovieQuote> mMovieQuotes;
     private Firebase mFirebaseQuotesReference;
-    private boolean mShowAllQuotes;
+
 
     public MovieQuoteArrayAdapter(Context context, String uid, boolean showAllQuotes) {
         mInflater = LayoutInflater.from(context);
         mMovieQuotes = new ArrayList<MovieQuote>();
-        mShowAllQuotes = showAllQuotes;
         Firebase.setAndroidContext(context);
 
-        mFirebaseQuotesReference = new Firebase("https://boutell-auth-movie-quotes.firebaseio.com/quotes");
+        mFirebaseQuotesReference = new Firebase(context.getString(R.string.firebase_url) + "/quotes");
         if (showAllQuotes) {
             mFirebaseQuotesReference.addChildEventListener(this);
         } else {

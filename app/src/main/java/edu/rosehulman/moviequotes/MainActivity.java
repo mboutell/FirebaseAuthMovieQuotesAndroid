@@ -189,8 +189,6 @@ public class MainActivity extends ListActivity {
         item.setTitleCondensed(getString(mShowAllQuotes ? R.string.show_mine : R.string.show_all));
         mAdapter = new MovieQuoteArrayAdapter(this, mUid, mShowAllQuotes);
         setListAdapter(mAdapter);
-
-
     }
 
     private void addItem() {
